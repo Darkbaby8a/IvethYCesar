@@ -492,6 +492,8 @@ Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría qu
 
 </body>
     <script>
+        const params = new URLSearchParams(window.location.search);
+const familia = params.get("familia");
         const familyName = document.getElementById("familyName");
 const passesCount = document.getElementById("passesCount");
 const btnAceptar = document.getElementById("btnAceptar");
@@ -540,6 +542,7 @@ if (!familia) {
 
 
 </html>
+
 
 
 
