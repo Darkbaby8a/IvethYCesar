@@ -51,8 +51,10 @@ export const handler = async (event) => {
   } catch (error) {
     console.error(error);
     return {
+      const dbInfo = await pool.query("SELECT current_database(), current_schema()");
+      console.log(dbInfo.rows);
       statusCode: 500,
-      body: JSON.stringify({ ok: false, error: error.message }),
+      body: JSON.stringify({ ok: false, error: error.message,paso:dbInfo }),
     };
   }
 };
