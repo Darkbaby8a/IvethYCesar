@@ -1,11 +1,11 @@
-import { Pool } from "pg";
+const { Pool } = require("pg");
 
 const pool = new Pool({
   connectionString: process.env.NETLIFY_DATABASE_URL_UNPOOLED,
   ssl: { rejectUnauthorized: false },
 });
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   if (event.httpMethod !== "GET") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
@@ -20,6 +20,9 @@ export const handler = async (event) => {
   }
 
   try {
+    // 🔍 prueba conexión
+    await pool.query("SELECT 1");
+
     const result = await pool.query(
       `
       SELECT familia, pases, acepto
@@ -49,12 +52,10 @@ export const handler = async (event) => {
       }),
     };
   } catch (error) {
-    console.error(error);
+    console.error("ERROR:", error);
     return {
-      const dbInfo = await pool.query("SELECT current_database(), current_schema()");
-      console.log(dbInfo.rows);
       statusCode: 500,
-      body: JSON.stringify({ ok: false, error: error.message,paso:dbInfo }),
+      body: JSON.stringify({ ok: false, error: error.message }),
     };
   }
 };
