@@ -27,7 +27,7 @@ export const handler = async (event) => {
     // 2️⃣ UPDATE en Neon
     const result = await pool.query(
       `
-      UPDATE public.invitados
+      UPDATE public.InvitadosCesar
       SET acepto = true,
           confirmado_en = NOW()
       WHERE familia = $1
@@ -76,3 +76,4 @@ export const handler = async (event) => {
     };
   }
 };
+
