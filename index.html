@@ -241,6 +241,10 @@
 			<p align="justify" class="mb-0 color-textos wow fadeInUp" data-wow-delay="0.6s" style="visibility: hidden; animation-delay: 0.6s; animation-name: none;">¡¡¡Tu presencia para nosotros será muy especial!!!<br></p> 
 			<p id="attendanceText"> Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría que pudieras confirmar tu asistencia antes de el 15 de abril de 2026 </p><br>
 			<p id="familiaextra"> </p><p id="passesCount"></p> 
+			<div id="qrContainer" style="display:none; margin-top:20px; text-align:center;">
+  			<h3>🎟️ Este será su pase de entrada</h3>
+ 			 <div id="qrCode"></div>
+			</div>
 			<div align="center" class="mb-20"><div  class="link-abrir color-principal" id="btnAceptar" ><i class="fa fa-map-marker"></i> Confirmar</a>
 			</div> 
 			</div> 
@@ -440,6 +444,7 @@ if (!familia) {
         
       if (invitado.Acepto) {
         mostrarGracias();
+		    generarQR(familia);
       } else {
         btnAceptar.style.display = "inline-block";
       }
@@ -462,6 +467,21 @@ if (!familia) {
       window.scrollTo(0, 0);
     }, 50);
   });
+		function generarQR(familia) {
+  const qrData = JSON.stringify({
+    familia: familia,
+    evento: "Boda Iveth & Cesar",
+    tipo: "PASE_ENTRADA"
+  });
+
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(qrData)}`;
+
+  const qrContainer = document.getElementById("qrContainer");
+  const qrCode = document.getElementById("qrCode");
+
+  qrCode.innerHTML = `<img src="${qrUrl}" alt="QR Pase de Entrada">`;
+  qrContainer.style.display = "block";
+}
  function mostrarGracias() {
             attendanceText.innerHTML = `
         💖 Gracias por aceptar nuestra invitación.<br>
@@ -476,11 +496,11 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Boda Cesar & Iveth//ES
 BEGIN:VEVENT
-UID:boda-daniel-ochoa-2026@example.com
+UID:boda-iveth-cesar-2026@example.com
 DTSTAMP:20260101T000000Z
 DTSTART:20260523T150000
 DTEND:20260523T230000
-SUMMARY:Boda Daniel Ochoa
+SUMMARY:Boda Iveth & Cesar
 DESCRIPTION:Recordatorio de la boda de Boda Cesar & Iveth
 LOCATION:Jardin Domus
 BEGIN:VALARM
@@ -517,6 +537,7 @@ END:VCALENDAR
                     if (res.ok) {
                         crearEventoCalendario();
                         mostrarGracias();
+						  generarQR(familia);
                     } else {
                         alert(res.message || "No se pudo confirmar la invitación");
                     }
@@ -530,6 +551,7 @@ END:VCALENDAR
 
 
 </html>
+
 
 
 
