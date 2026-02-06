@@ -53,9 +53,46 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     console.error("ERROR:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ ok: false, error: error.message }),
-    };
+
+    try {
+      // 🔎 info de conexión
+      const connInfo = await pool.query(`
+        SELECT 
+          current_database() AS database,
+          current_user AS user,
+          inet_server_addr() AS server_ip
+      `);
+
+      // 📋 tablas disponibles
+      const tablas = await pool.query(`
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+        ORDER BY table_name;
+      `);
+
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          ok: false,
+          error: error.message,
+          debug: {
+            database: connInfo.rows[0],
+            tablas: tablas.rows.map(t => t.table_name),
+            connectionString: process.env.NETLIFY_DATABASE_URL_UNPOOLED
+              ?.replace(/:.+@/, ":****@"), // oculta password
+          },
+        }),
+      };
+    } catch (debugError) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({
+          ok: false,
+          error: error.message,
+          debugError: debugError.message,
+        }),
+      };
+    }
   }
 };
