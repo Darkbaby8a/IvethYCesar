@@ -24,7 +24,11 @@
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
+<style>
+    html, body {
+  scroll-behavior: auto;
+}
+</style>
 </head>
 
 <body id="body" class="bg-invitacion">
@@ -482,10 +486,21 @@ if (!familia) {
       passesBox.style.display = "none";
     });
 }
+  window.onload = () => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 50);
+  });
+
+
     </script>
 
 
 </html>
+
 
 
 
