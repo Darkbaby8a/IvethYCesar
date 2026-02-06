@@ -10,7 +10,7 @@ export const handler = async () => {
     const { rows } = await pool.query(`
       SELECT
         familia,
-        displayname,
+        dipleyname,
         pases,
         acepto,
         confirmado_en
