@@ -219,38 +219,66 @@
     <!-- Vestimenta Fin -->
 
     <!-- Mesa de Regalos Inicio -->
-    <section id="regalos" class="padding-section" style="background-color: rgba(255,255,255,.4);">
-        <div class="container">
-            <h1 align="center" class="titulo color-titulos wow fadeInUp" data-wow-delay="0.6s"
-                style="visibility: hidden; animation-delay: 0.6s; animation-name: none;">Lluvia De Sobres</h1>
-                <div align="center" class="mb-10 wow fadeInUp" data-wow-delay="0.6s"
-                        style="visibility: hidden; animation-delay: 0.6s; animation-name: none;"><img
-                            src="assets/img/lluviaSobre.png" width="120"></div>
-            <p align="center" class="color-textos mb-30 wow fadeInUp" data-wow-delay="0.4s"
-                style="visibility: hidden; animation-delay: 0.4s; animation-name: none;">Para nosotros contar con tu compañía, es el mejor obsequio; pero si deseas hacernos un detalle hemos preparado un buzón donde podrás dejar tu regalo en efectivo con mucho cariño</p>
-        </div>
-    </section>
-    <!-- Mesa de Regalos Fin -->
+<section id="hashtag" class="padding-section" style="background-color: rgba(255,255,255,.4);">
+  <div class="container">
 
-    <!-- Hashstag Inicio -->
-    <section id="hashtag" class="padding-section" style="background-color: rgba(255,255,255,.4);">
-        <div class="container">
-            
-            <h1 align="center" id="familyName" class="titulo color-titulos wow fadeInUp" data-wow-delay="0.6s"
-                style="font-size: 26px !important; visibility: hidden; animation-delay: 0.6s; animation-name: none;">
-               
-            </h1>
-            <div id="passesBox">
-            <p align="center" class="mb-0 color-textos wow fadeInUp" data-wow-delay="0.6s"
-                style="visibility: hidden; animation-delay: 0.6s; animation-name: none;">¡¡¡Tu presencia para nosotros será muy especial!!!<br></p>
-            <p id="attendanceText">
+    <!-- Nombre de la familia -->
+    <h1
+      id="familyName"
+      class="titulo color-titulos text-center wow fadeInUp"
+      data-wow-delay="0.4s"
+      style="display:none; font-size:26px; margin-bottom:15px;"
+    ></h1>
 
-Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría que pudieras confirmar tu asistencia antes de  el 15 de abril de 2026 </p><br>
-            <p id="familiaextra"> </p><p id="passesCount"></p>
-             <div align="center" class="mb-20"><a href="#" target="_blank" class="link-abrir color-principal" id="btnAceptar"><i class="fa fa-map-marker"></i> Confirmar</a></div>
-                </div>
-        </div>
-    </section>
+    <!-- Caja principal -->
+    <div
+      id="passesBox"
+      style="display:none; max-width:600px; margin:0 auto; padding:25px 20px; background:#fff; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,.08);"
+      class="wow fadeInUp"
+      data-wow-delay="0.6s"
+    >
+
+      <p class="text-center color-textos" style="font-size:16px; margin-bottom:12px;">
+        ¡¡¡Tu presencia para nosotros será muy especial!!!
+      </p>
+
+      <p
+        id="attendanceText"
+        class="text-center color-textos"
+        style="font-size:15px; line-height:1.6; margin-bottom:18px;"
+      >
+        Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría
+        que pudieras confirmar tu asistencia antes del
+        <strong>15 de abril de 2026</strong>.
+      </p>
+
+      <p
+        id="familiaextra"
+        class="text-center color-textos"
+        style="font-size:15px; margin-bottom:10px;"
+      ></p>
+
+      <p
+        id="passesCount"
+        class="text-center color-textos"
+        style="font-size:16px; font-weight:600; margin-bottom:25px;"
+      ></p>
+
+      <div class="text-center">
+        <a
+          href="#"
+          id="btnAceptar"
+          class="link-abrir color-principal"
+          style="display:none; padding:12px 28px; border-radius:30px; font-size:15px;"
+        >
+          <i class="fa fa-check"></i> Confirmar asistencia
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
     <!-- Hashstag Fin -->
 
     <!-- Fotos Inicio -->
@@ -372,47 +400,6 @@ Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría qu
             opacity: 0
         }
     </style>
-
-    <script>
-        function redirectToWhatsApp() {
-            /* Isi Pesan Form */
-            var name = document.getElementById("name").value;
-            var subject = document.getElementById("asistencia").value;
-            var massage = document.getElementById("comment").value;
-            var postLink = window.location.href;
-
-            /* validation */
-            var error_name = document.getElementById("error_name"),
-                error_message = document.getElementById("error_message");
-
-            var text;
-            if (name == "") {
-                text = 'Escribe tu nombre';
-                error_name.setAttribute('data-text', text);
-                return false;
-            }
-
-            if (massage == "") {
-                text = 'Escribe un mensaje';
-                error_message.setAttribute('data-text', text);
-                return false;
-            }
-            /* Pengaturan Pesan */
-            var message = "Confirmación de Asistencia" + "\n\n";
-            message += "*Nombre:* " + name + "\n\n";
-            message += "*¿Asistirás?:* " + subject + "\n\n";
-            message += "*Mensaje:* " + massage;
-            /* Pengaturan Whatsapp */
-            var walink = 'whatsapp://send',
-                phoneNumber = '+521';
-
-            var encodedMessage = encodeURIComponent(message);
-            var whatsappUrl = walink + "?phone=" + phoneNumber + "&text=" + encodedMessage;
-            window.open(whatsappUrl, '_blank');
-            return true;
-        }
-
-    </script>
     <script>
         $(window).on('scroll', function () {
             function isScrollIntoView(elem, index) {
@@ -447,49 +434,6 @@ Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría qu
             $('#cintillo').addClass('cintillo-scrolled');
         }
     </script>
-    <a href="https://wa.me/5215567338716?text=¡Hola!%20Me%20interesa%20contratar%20esta%20invitación%0A%0Ahttps://rheainvitaciones.com/Invitaciones/Invitacion-Digital-278/"
-        class="whatsapp-button" target="_blank">
-        <i class="fa fa-whatsapp my-float"></i>
-    </a>
-    <style>
-        .whatsapp-button {
-            position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 20px;
-            right: 20px;
-            background-color: #25d366;
-            color: #FFF !important;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 3px #999;
-            z-index: 100;
-            transition: .5s;
-            display: flex;
-            justify-content: center;
-            align-content: center;
-            flex-direction: column;
-            text-align: center;
-            z-index: 999999999999;
-
-        }
-
-        .whatsapp-button:hover i,
-        a {
-            color: #fff;
-            text-decoration: none !important;
-        }
-
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            transition: .5s;
-        }
-    </style>
-
-
-
-
 </body>
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -542,6 +486,7 @@ if (!familia) {
 
 
 </html>
+
 
 
 
