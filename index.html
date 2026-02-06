@@ -518,8 +518,8 @@ if (!familia) {
 
       const invitado = res.invitado;
 
-      familyName.textContent = invitado.DisplayName;
-        familiaextra.textContent = invitado.DisplayName;
+      familyName.textContent = invitado.Familia;
+        familiaextra.textContent = invitado.Familia;
       passesCount.innerHTML = `Tienen <strong>${invitado.Pases}</strong> pases reservados`;
 
       if (invitado.Acepto) {
@@ -542,6 +542,7 @@ if (!familia) {
 
 
 </html>
+
 
 
 
