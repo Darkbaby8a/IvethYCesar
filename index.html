@@ -140,9 +140,9 @@
                         <li><span class="circulo-tiempo" id="minutes"></span>Min</li>
                         <li><span class="circulo-tiempo" id="seconds"></span>Seg</li>
                     </ul>
-                    <div align="center" class="mb-0"><a href="" target="_blank" class="link-abrir"
+                    <div align="center" class="mb-0"><div onclick="crearEventoCalendario()" class="link-abrir"
                             style="cursor: pointer; border: 1px solid #fff;"><i class="fa fa-calendar"></i> Agregar a
-                            calendario</a></div>
+                            calendario</div></div>
                 </div>
             </div>
         </div>
@@ -232,18 +232,55 @@
 	</div></div>
      
     </section>
-<section id="hashtag" class="padding-section" style="background-color: rgba(255,255,255,.4);"> 
-	<div class="container"> 
-		<h1 align="center" id="familyName" class="titulo color-titulos wow fadeInUp" data-wow-delay="0.6s" style="font-size: 26px !important; visibility: hidden; animation-delay: 0.6s; animation-name: none;"> </h1> 
-		<div id="passesBox"> 
-			<p align="center" class="mb-0 color-textos wow fadeInUp" data-wow-delay="0.6s" style="visibility: hidden; animation-delay: 0.6s; animation-name: none;">¡¡¡Tu presencia para nosotros será muy especial!!!<br></p> 
-			<p id="attendanceText"> Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría que pudieras confirmar tu asistencia antes de el 15 de abril de 2026 </p><br>
-			<p id="familiaextra"> </p><p id="passesCount"></p> 
-			<div align="center" class="mb-20"><a href="#" target="_blank" class="link-abrir color-principal" id="btnAceptar"><i class="fa fa-map-marker"></i> Confirmar</a></div> 
-		</div> 
-	</div> 
+	  <!-- Hashstag Fin -->
+	<!-- Invitacion Inteligente -->
+<section id="hashtag" class="padding-section" style="background-color: rgba(255,255,255,.4);">
+  <div class="container">
+
+    <!-- Nombre de la familia -->
+    <h1
+      id="familyName"
+      class="titulo color-titulos text-center wow fadeInUp"
+      data-wow-delay="0.6s"
+      style="display:none; font-size:26px;"
+    ></h1>
+
+    <!-- Caja principal -->
+    <div id="passesBox" style="display:none;">
+
+      <p class="text-center mb-0 color-textos wow fadeInUp" data-wow-delay="0.6s">
+        ¡¡¡Tu presencia para nosotros será muy especial!!!
+      </p>
+
+      <!-- Texto dinámico -->
+      <p id="attendanceText" class="text-center mt-10 color-textos">
+        Queremos asegurarnos de que tu lugar esté reservado, por eso nos encantaría
+        que pudieras confirmar tu asistencia antes del <strong>15 de abril de 2026</strong>.
+      </p>
+
+      <!-- Familia extra (si aplica) -->
+      <p id="familiaextra" class="text-center color-textos"></p>
+
+      <!-- Pases -->
+      <p id="passesCount" class="text-center color-textos"></p>
+
+      <!-- Botón confirmar -->
+      <div class="text-center mt-20">
+        <a
+          href="#"
+          class="link-abrir color-principal"
+          id="btnAceptar"
+          style="display:none;"
+        >
+          <i class="fa fa-check"></i> Confirmar asistencia
+        </a>
+      </div>
+
+    </div>
+
+  </div>
 </section>
-    <!-- Hashstag Fin -->
+    <!--  Invitacion Inteligente -->
 
     <!-- Fotos Inicio -->
     <section id="fotos" class="padding-section" style="background-color: rgba(255,255,255,.4);">
@@ -459,12 +496,53 @@ if (!familia) {
       window.scrollTo(0, 0);
     }, 50);
   });
+ function mostrarGracias() {
+            attendanceText.innerHTML = `
+        💖 Gracias por aceptar nuestra invitación.<br>
+        Por favor recuerda la fecha.<br>
+        Será un honor contar con ustedes.
+    `;
+            btnAceptar.style.display = "none";
+        }
+ function crearEventoCalendario() {
+  const ics = `
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Boda Cesar & Iveth//ES
+BEGIN:VEVENT
+UID:boda-daniel-ochoa-2026@example.com
+DTSTAMP:20260101T000000Z
+DTSTART:20260523T150000
+DTEND:20260523T230000
+SUMMARY:Boda Daniel Ochoa
+DESCRIPTION:Recordatorio de la boda de Boda Cesar & Iveth
+LOCATION:Jardin Domus
+BEGIN:VALARM
+TRIGGER:-P14D
+ACTION:DISPLAY
+DESCRIPTION:Recordatorio boda
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+  `.trim();
 
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
 
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "Boda_Daniel_Ochoa.ics";
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
     </script>
 
 
 </html>
+
 
 
 
