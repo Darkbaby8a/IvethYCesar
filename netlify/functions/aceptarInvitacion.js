@@ -14,9 +14,9 @@ export const handler = async (event) => {
   }
 
   try {
-    const { familia, accion } = JSON.parse(event.body);
+    const { familia, asistira } = JSON.parse(event.body);
 
-    if (!familia || !accion) {
+    if (!familia || !asistira) {
       return {
         statusCode: 400,
         body: JSON.stringify({ ok: false, message: "Datos incompletos" }),
@@ -26,7 +26,7 @@ export const handler = async (event) => {
     let query = "";
     let values = [familia];
 
-    if (accion === "aceptar") {
+    if (asistira === true) {
       query = `
         UPDATE public.invitadoscesar
         SET acepto = true,
@@ -35,7 +35,7 @@ export const handler = async (event) => {
         WHERE familia = $1
         RETURNING id;
       `;
-    } else if (accion === "rechazar") {
+    } else if (asistira === false) {
       query = `
         UPDATE public.invitadoscesar
         SET rechazo = true,
@@ -82,3 +82,4 @@ export const handler = async (event) => {
     };
   }
 };
+
