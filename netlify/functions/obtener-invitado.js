@@ -25,7 +25,7 @@ exports.handler = async (event) => {
 
     const result = await pool.query(
       `
-      SELECT dipleyname, pases, acepto,vestimenta
+      SELECT dipleyname, pases, acepto,vestimenta,rechazo
       FROM public.invitadoscesar
       WHERE familia = $1
       LIMIT 1;
@@ -49,6 +49,7 @@ exports.handler = async (event) => {
           Pases: result.rows[0].pases,
           Acepto: result.rows[0].acepto,
           vestimenta: result.rows[0].vestimenta,
+          rechazo: result.rows[0].rechazo,
         },
       }),
     };
