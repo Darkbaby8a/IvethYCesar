@@ -6,6 +6,7 @@ const pool = new Pool({
 });
 
 export const handler = async (event) => {
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -14,56 +15,72 @@ export const handler = async (event) => {
   }
 
   try {
-    const { familia, asistira } = JSON.parse(event.body);
 
-if (!familia || typeof asistira !== "boolean") {
+    // 1️⃣ Parsear body
+    const body = JSON.parse(event.body || "{}");
+
+    const familia = body.familia;
+    let asistira = body.asistira;
+
+    // 2️⃣ Convertir string a boolean si es necesario
+    if (asistira === "true") asistira = true;
+    if (asistira === "false") asistira = false;
+
+    // 3️⃣ Validaciones
+    if (!familia || typeof asistira !== "boolean") {
       return {
         statusCode: 400,
-        body: JSON.stringify({ ok: false, message: "Datos incompletos" }),
+        body: JSON.stringify({
+          ok: false,
+          message: "Datos incompletos o inválidos",
+        }),
       };
     }
 
-    let query = "";
-    let values = [familia];
+    // 4️⃣ Construir query
+    let query;
 
-    if (asistira === true) {
+    if (asistira) {
       query = `
         UPDATE public.invitadoscesar
         SET acepto = true,
             rechazo = false,
             confirmado_en = NOW()
         WHERE familia = $1
+          AND acepto = false
+          AND rechazo = false
         RETURNING id;
       `;
-    } else if (asistira === false) {
+    } else {
       query = `
         UPDATE public.invitadoscesar
         SET rechazo = true,
             acepto = false,
             confirmado_en = NOW()
         WHERE familia = $1
+          AND acepto = false
+          AND rechazo = false
         RETURNING id;
       `;
-    } else {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ ok: false, message: "Acción inválida" }),
-      };
     }
 
-    const result = await pool.query(query, values);
+    // 5️⃣ Ejecutar query
+    const result = await pool.query(query, [familia]);
 
     if (result.rowCount === 0) {
       return {
         statusCode: 200,
         body: JSON.stringify({
           ok: false,
-          message: "Invitación no encontrada",
+          message: "Invitación no encontrada o ya confirmada",
         }),
       };
     }
 
-    console.log(`Invitación actualizada (${accion}):`, familia);
+    console.log(
+      `Invitación actualizada (${asistira ? "aceptó" : "rechazó"}):`,
+      familia
+    );
 
     return {
       statusCode: 200,
@@ -71,6 +88,7 @@ if (!familia || typeof asistira !== "boolean") {
     };
 
   } catch (error) {
+
     console.error("ERROR Neon:", error.message);
 
     return {
@@ -82,5 +100,3 @@ if (!familia || typeof asistira !== "boolean") {
     };
   }
 };
-
-
