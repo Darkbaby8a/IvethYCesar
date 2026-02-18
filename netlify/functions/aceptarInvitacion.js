@@ -16,7 +16,7 @@ export const handler = async (event) => {
   try {
     const { familia, asistira } = JSON.parse(event.body);
 
-    if (!familia || !asistira) {
+if (!familia || typeof asistira !== "boolean") {
       return {
         statusCode: 400,
         body: JSON.stringify({ ok: false, message: "Datos incompletos" }),
@@ -82,4 +82,5 @@ export const handler = async (event) => {
     };
   }
 };
+
 
