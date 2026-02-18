@@ -527,37 +527,43 @@ if (!familia) {
   btnAceptar.style.display = "none";
   passesBox.style.display = "none";
 } else {
-  fetch(`/.netlify/functions/obtener-invitado?familia=${encodeURIComponent(familia)}`)
-    .then(res => res.json())
-    .then(res => {
-      if (!res.ok || !res.invitado) {
-        attendanceText.textContent = "Invitación no encontrada.";
-        btnAceptar.style.display = "none";
-        passesBox.style.display = "none";
-        return;
-      }
-
-      const invitado = res.invitado;
-
-      familyName.textContent = invitado.Familia;
-        familiaextra.textContent = invitado.Familia;
-      passesCount.innerHTML = `Tienen <strong>${invitado.Pases}</strong> pases reservados`;
-    if(invitado.vestimenta ==1){
-        idvestimenta.textContent = "Te recomendamos usar estos colores";
-    }else{
-        idvestimenta.textContent = "Evita usar estos colores";
+fetch(`/.netlify/functions/obtener-invitado?familia=${encodeURIComponent(familia)}`)
+  .then(res => res.json())
+  .then(res => {
+    if (!res.ok || !res.invitado) {
+      attendanceText.textContent = "Invitación no encontrada.";
+      btnAceptar.style.display = "none";
+      passesBox.style.display = "none";
+      return;
     }
-        
-      if (invitado.Acepto) {
-        mostrarGracias();
-		    generarQR(familia);
-      } else {
-        btnAceptar.style.display = "inline-block";
-      }
 
-btnAceptar.addEventListener("click", () => {
-  document.getElementById("modalConfirmacion").style.display = "flex";
-});
+    const invitado = res.invitado;
+
+    familyName.textContent = invitado.Familia;
+    familiaextra.textContent = invitado.Familia;
+    passesCount.innerHTML = `Tienen <strong>${invitado.Pases}</strong> pases reservados`;
+
+    if (invitado.vestimenta == 1) {
+      idvestimenta.textContent = "Te recomendamos usar estos colores";
+    } else {
+      idvestimenta.textContent = "Evita usar estos colores";
+    }
+
+    if (invitado.Acepto) {
+      mostrarGracias();
+      generarQR(familia);
+    } else {
+      btnAceptar.style.display = "inline-block";
+    }
+
+    btnAceptar.addEventListener("click", () => {
+      modal.style.display = "flex";
+    });
+  })
+  .catch(error => {
+    console.error("Error obteniendo invitado:", error);
+    attendanceText.textContent = "Error al cargar la invitación.";
+  });
 
 }
 		  const modal = document.getElementById("modalConfirmacion");
@@ -689,6 +695,7 @@ END:VCALENDAR
 
 
 </html>
+
 
 
 
