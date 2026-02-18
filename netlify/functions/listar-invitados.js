@@ -13,9 +13,10 @@ export const handler = async () => {
         dipleyname,
         pases,
         acepto,
+        rechazo,
         confirmado_en
       FROM invitadoscesar
-      ORDER BY familia
+      ORDER BY dipleyname
     `);
 
     return {
