@@ -1,58 +1,90 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Lista de Invitados</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f6f6f6;
-      padding: 30px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .filtros {
-      text-align: center;
-      margin-bottom: 15px;
-    }
-    select {
-      padding: 8px;
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background: #222;
-      color: white;
-    }
-    .ok {
-      color: green;
-      font-weight: bold;
-    }
-    .no {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Invitados</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  padding: 30px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.resumen {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.filtros {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+input, select {
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+th {
+  background: #222;
+  color: white;
+}
+
+.ok {
+  color: green;
+  font-weight: bold;
+}
+
+.no {
+  color: red;
+  font-weight: bold;
+}
+
+.pendiente {
+  color: #999;
+  font-weight: bold;
+}
+</style>
 </head>
+
 <body>
 
-<h1>📋 Invitados</h1>
+<h1>📋 Lista de Invitados</h1>
+
+<div class="resumen" id="resumen"></div>
 
 <div class="filtros">
-  Mostrar:
+  <input type="text" id="busqueda" placeholder="Buscar por nombre o familia">
+
   <select id="filtroEstado">
     <option value="todos">Todos</option>
     <option value="aceptados">Aceptados</option>
-    <option value="no">No aceptados</option>
+    <option value="rechazados">Rechazados</option>
+    <option value="pendientes">Pendientes</option>
   </select>
 </div>
 
@@ -77,38 +109,85 @@ fetch("/.netlify/functions/listar-invitados")
   .then(data => {
     if (!data.ok) return;
     invitados = data.invitados;
-    renderTabla("todos");
+    renderTabla();
   });
 
-document.getElementById("filtroEstado").addEventListener("change", e => {
-  renderTabla(e.target.value);
-});
+document.getElementById("filtroEstado").addEventListener("change", renderTabla);
+document.getElementById("busqueda").addEventListener("input", renderTabla);
 
-function renderTabla(filtro) {
+function renderTabla() {
+
+  const filtro = document.getElementById("filtroEstado").value;
+  const busqueda = document.getElementById("busqueda").value.toLowerCase();
   const tbody = document.getElementById("tabla");
+  const resumen = document.getElementById("resumen");
+
   tbody.innerHTML = "";
 
-  invitados
-    .filter(inv => {
-      if (filtro === "aceptados") return inv.acepto;
-      if (filtro === "no") return !inv.acepto;
-      return true;
-    })
-    .forEach(inv => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${inv.familia}</td>
-        <td>${inv.dipleyname}</td>
-        <td>${inv.pases}</td>
-        <td class="${inv.acepto ? "ok" : "no"}">
-          ${inv.acepto ? "Aceptó" : "No aceptó"}
-        </td>
-        <td>${inv.confirmado_en 
+  let aceptados = 0;
+  let rechazados = 0;
+  let pendientes = 0;
+  let pasesConfirmados = 0;
+
+  const filtrados = invitados.filter(inv => {
+
+    // Filtro por estado
+    if (filtro === "aceptados" && !inv.acepto) return false;
+    if (filtro === "rechazados" && !inv.rechazo) return false;
+    if (filtro === "pendientes" && (inv.acepto || inv.rechazo)) return false;
+
+    // Filtro por búsqueda
+    const texto = (inv.dipleyname + inv.familia).toLowerCase();
+    if (!texto.includes(busqueda)) return false;
+
+    return true;
+  });
+
+  filtrados.forEach(inv => {
+
+    let estadoTexto = "Pendiente";
+    let claseEstado = "pendiente";
+
+    if (inv.acepto) {
+      estadoTexto = "Aceptó";
+      claseEstado = "ok";
+      aceptados++;
+      pasesConfirmados += Number(inv.pases);
+    } 
+    else if (inv.rechazo) {
+      estadoTexto = "Rechazó";
+      claseEstado = "no";
+      rechazados++;
+    } 
+    else {
+      pendientes++;
+    }
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${inv.familia}</td>
+      <td>${inv.dipleyname}</td>
+      <td>${inv.pases}</td>
+      <td class="${claseEstado}">
+        ${estadoTexto}
+      </td>
+      <td>
+        ${inv.confirmado_en 
           ? new Date(inv.confirmado_en).toLocaleString() 
-          : "-"}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+          : "-"}
+      </td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+
+  resumen.innerHTML = `
+    Total: ${invitados.length} |
+    🟢 Aceptados: ${aceptados} |
+    🔴 Rechazados: ${rechazados} |
+    ⚪ Pendientes: ${pendientes} |
+    🎟 Pases confirmados: ${pasesConfirmados}
+  `;
 }
 </script>
 
