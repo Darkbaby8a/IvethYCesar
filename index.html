@@ -549,12 +549,25 @@ fetch(`/.netlify/functions/obtener-invitado?familia=${encodeURIComponent(familia
       idvestimenta.textContent = "Evita usar estos colores";
     }
 
-    if (invitado.Acepto) {
-      mostrarGracias();
-      generarQR(familia);
-    } else {
-      btnAceptar.style.display = "inline-block";
-    }
+// 🟢 Si aceptó
+if (invitado.Acepto === true && invitado.rechazo === false) {
+  mostrarGracias();
+  generarQR(familia);
+  btnAceptar.style.display = "none";
+}
+
+// 🔴 Si rechazó
+else if (invitado.rechazo === true && invitado.Acepto === false) {
+  attendanceText.textContent = "Lamentamos que no puedas asistir 🤍";
+  btnAceptar.style.display = "none";
+  passesBox.style.display = "none";
+}
+
+// ⚪ Si aún no confirma
+else {
+  btnAceptar.style.display = "inline-block";
+}
+
 
     btnAceptar.addEventListener("click", () => {
       modal.style.display = "flex";
@@ -695,6 +708,7 @@ END:VCALENDAR
 
 
 </html>
+
 
 
 
