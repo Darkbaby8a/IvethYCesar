@@ -30,7 +30,7 @@ export const handler = async (event) => {
         rechazo,
         COALESCE(pasesuti, 0)      AS pasesusados,
         pases - COALESCE(pasesuti, 0) AS disponibles
-      FROM public.invitados
+      FROM invitadoscesar
       WHERE dipleyname ILIKE $1
       ORDER BY dipleyname
       LIMIT 5;
@@ -51,7 +51,7 @@ export const handler = async (event) => {
         ok: true,
         invitados: result.rows.map(r => ({
           familia: r.familia,
-          displayname: r.dipleyname,
+          dipleyname: r.dipleyname,
           pases: r.pases,
           usados: r.pasesusados,
           disponibles: r.disponibles,
