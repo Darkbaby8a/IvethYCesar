@@ -26,7 +26,7 @@ export const handler = async (event) => {
       SELECT
         id,
         familia,
-        displayname,
+        dipleyname,
         pases,
         COALESCE(pasesuti,0) as pasesuti,
         acepto,
@@ -34,7 +34,7 @@ export const handler = async (event) => {
         confirmado_en
       FROM invitados
       WHERE familia = $1
-      ORDER BY displayname
+      ORDER BY dipleyname
     `, [familia]);
 
     return {
