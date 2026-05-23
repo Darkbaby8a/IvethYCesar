@@ -10,7 +10,7 @@ export const handler = async (event) => {
     const { familia, pasesUsar } = JSON.parse(event.body);
 
     const { rows } = await pool.query(
-      `SELECT pases, pasesuti FROM invitados WHERE familia = $1`,
+      `SELECT pases, pasesuti FROM invitadoscesar WHERE familia = $1`,
       [familia]
     );
 
@@ -25,7 +25,7 @@ export const handler = async (event) => {
       };
 
     await pool.query(
-      `UPDATE invitados
+      `UPDATE invitadoscesar
        SET pasesuti = COALESCE(pasesuti,0) + $1
        WHERE familia = $2`,
       [pasesUsar, familia]
