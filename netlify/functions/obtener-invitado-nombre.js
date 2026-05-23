@@ -6,20 +6,31 @@ const pool = new Pool({
 });
 
 export const handler = async (event) => {
+
   if (event.httpMethod !== "GET") {
-    return { statusCode: 405, body: "Method Not Allowed" };
-  }
-
-  const nombre = event.queryStringParameters?.displayname;
-
-  if (!nombre) {
     return {
-      statusCode: 400,
-      body: JSON.stringify({ ok: false, message: "DisplayName requerido" }),
+      statusCode: 405,
+      body: "Method Not Allowed"
     };
   }
 
+  const nombre =
+    event.queryStringParameters?.displayname;
+
+  if (!nombre) {
+
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        ok: false,
+        message: "DisplayName requerido"
+      }),
+    };
+
+  }
+
   try {
+
     const result = await pool.query(
       `
       SELECT
@@ -28,21 +39,25 @@ export const handler = async (event) => {
         acepto,
         dipleyname,
         rechazo,
-        COALESCE(pasesuti, 0)      AS pasesusados,
+        COALESCE(pasesuti, 0) AS pasesusados,
         pases - COALESCE(pasesuti, 0) AS disponibles
       FROM invitadoscesar
-      WHERE dipleyname ILIKE $1
+      WHERE LOWER(dipleyname) LIKE LOWER($1)
       ORDER BY dipleyname
       LIMIT 5;
       `,
-      [`%${nombre}%`]
+      [`%${nombre.toLowerCase()}%`]
     );
 
     if (result.rowCount === 0) {
+
       return {
         statusCode: 200,
-        body: JSON.stringify({ ok: false }),
+        body: JSON.stringify({
+          ok: false
+        }),
       };
+
     }
 
     return {
@@ -62,7 +77,11 @@ export const handler = async (event) => {
     };
 
   } catch (error) {
-    console.error("ERROR obtener invitado por nombre:", error);
+
+    console.error(
+      "ERROR obtener invitado por nombre:",
+      error
+    );
 
     return {
       statusCode: 500,
@@ -71,5 +90,7 @@ export const handler = async (event) => {
         error: error.message,
       }),
     };
+
   }
+
 };
