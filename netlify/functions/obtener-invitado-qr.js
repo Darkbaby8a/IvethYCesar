@@ -32,7 +32,7 @@ export const handler = async (event) => {
         acepto,
         rechazo,
         confirmado_en
-      FROM invitados
+      FROM invitadoscesar
       WHERE familia = $1
       ORDER BY dipleyname
     `, [familia]);
