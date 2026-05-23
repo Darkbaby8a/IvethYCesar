@@ -42,7 +42,7 @@ export const handler = async (event) => {
 
     if (asistira) {
       query = `
-        UPDATE public.invitadoscesar
+        UPDATE invitadoscesar
         SET acepto = true,
             rechazo = false,
             confirmado_en = NOW()
@@ -53,7 +53,7 @@ export const handler = async (event) => {
       `;
     } else {
       query = `
-        UPDATE public.invitadoscesar
+        UPDATE invitadoscesar
         SET rechazo = true,
             acepto = false,
             confirmado_en = NOW()
